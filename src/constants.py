@@ -1,17 +1,18 @@
-def get_rook_name():
-    return "rook"
+"""
+Game Config Related Constants
+"""
+#Window Size
+WINDOW_X = 800
+WINDOW_Y = 600
 
-def get_queen_name():
-    return "queen"
+"""
+String Literals
+"""
 
-def get_king_name():
-    return "king"
-
-def get_pawn_name():
-    return "pawn"
-
-def get_bishop_name():
-    return "bishop"
-
-def get_knight_name():
-    return "knight"
+#Piece Names
+BISHOP_NAME = "bishop"
+KING_NAME = "king"
+KNIGHT_NAME = "Knight"
+PAWN_NAME = "pawn"
+ROOK_NAME = "rook"
+QUEEN_NAME = "queen"
