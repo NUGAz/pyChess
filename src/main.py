@@ -7,6 +7,9 @@ from pygame.locals import *
 play_button = None
 exit_button = None
 
+WINDOW_X = 1000
+WINDOW_Y = 750
+
 def draw_text(text, font, text_color, x, y):
     img = font.render(text, True, text_color)
     screen.blit(img, (x,y))
@@ -28,9 +31,11 @@ def reset_screen():
     screen.fill(constants.WHITE)
 
 def draw_main_title():
-    draw_text("py", title_font, constants.BLACK, 150, 80)
-    draw_text("Chess", title_font, constants.BLACK, 250, 160)
-    draw_text("Press Space to advance", start_font, constants.BLACK, 250, 500)
+    text_width, text_height = title_font.size("Chess")
+
+    draw_text("py", start_font, constants.BLACK, WINDOW_X * 0.19, WINDOW_Y * 0.13)
+    draw_text("Chess", title_font, constants.BLACK, (constants.CENTER_X - text_width / 2), (constants.CENTER_Y - text_height / 2))
+    draw_text("Press Space to advance", start_font, constants.BLACK, WINDOW_X * 0.31, WINDOW_Y * 0.83)
 
 def draw_main_menu():
     global play_button
@@ -46,7 +51,7 @@ def draw_chess_board():
     square_size = constants.CHESS_BOARD_SQUARE_SIZE
     offset = constants.CHESS_BOARD_OFFSET
     size_offseted = square_size + offset
-    square_color_1 = constants.WHITE
+    square_color_1 = constants.CHESS_BOARD_WHITE
     square_color_2 = constants.BLACK
 
     for i in range(1, 9):
@@ -80,15 +85,36 @@ def draw_scene(scene_state):
     if(scene_state == constants.CHESS_SCREEN):
         draw_chess_board()
 
+def calculate_new_window_size(event):
+            new_width, new_height = event.size
+            
+            # Calculate the aspect ratio of the new window
+            aspect_ratio = new_width / new_height
+            
+            # If the aspect ratio of the new window doesn't match the aspect ratio of the game
+            if aspect_ratio != constants.ASPECT_RATIO[0] / constants.ASPECT_RATIO[1]:
+                # Calculate the new width and height of the window to maintain the aspect ratio
+                if aspect_ratio > constants.ASPECT_RATIO[0] / constants.ASPECT_RATIO[1]:
+                    new_height = int(new_width / constants.ASPECT_RATIO[0] * constants.ASPECT_RATIO[1])
+                else:
+                    new_width = int(new_height * constants.ASPECT_RATIO[0] / constants.ASPECT_RATIO[1])
+            
+            # Resize the window to the new size
+            WINDOW_X = new_width
+            WINDOW_Y = new_height
+            pygame.display.set_mode((new_width, new_height), pygame.RESIZABLE)
+
+
 if __name__ == "__main__":
     pygame.init()
     pygame.display.set_caption('Welcome to pyChess')
-    screen = pygame.display.set_mode((constants.WINDOW_X, constants.WINDOW_Y))
+    clock = pygame.time.Clock()
+    screen = pygame.display.set_mode((WINDOW_X, WINDOW_Y), pygame.RESIZABLE)
     current_state = constants.WELCOME_SCREEN
     
     chess_game = chess.Chess()
 
-    title_font = pygame.font.SysFont("arial", 100)
+    title_font = pygame.font.SysFont("arial", constants.TITLE_FONT_SIZE)
     start_font = pygame.font.SysFont("arial", 25)
     button_font = pygame.font.SysFont("arial", 50)
 
@@ -98,6 +124,9 @@ if __name__ == "__main__":
         draw_scene(current_state)
 
         for event in pygame.event.get():
+            if event.type == VIDEORESIZE:
+                calculate_new_window_size(event)
+
             if event.type == KEYDOWN:
 
                 if event.key == K_BACKSPACE:
