@@ -5,11 +5,6 @@ Game Config Related Constants
 """
 #Window Size
 ASPECT_RATIO = (4,3)
-WINDOW_X = 1000
-WINDOW_Y = 750
-CENTER_X = WINDOW_X / 2
-CENTER_Y = WINDOW_Y / 2
-TITLE_FONT_SIZE = math.floor(WINDOW_X / 6)
 GAME_FPS = 60
 
 #Scaling factors
@@ -35,6 +30,11 @@ KNIGHT_NAME = "Knight"
 PAWN_NAME = "pawn"
 ROOK_NAME = "rook"
 QUEEN_NAME = "queen"
+
+#Title_Texts
+TITLE_CHESS = "Chess"
+TITLE_PY = "py"
+TITLE_START_SPACE = "Press Space to advance"
 
 """
 Screen States
