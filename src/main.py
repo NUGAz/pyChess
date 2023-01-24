@@ -1,6 +1,7 @@
 import pygame
 import chess
 import constants
+import math
 
 from pygame.locals import *
 
@@ -31,11 +32,14 @@ def reset_screen():
     screen.fill(constants.WHITE)
 
 def draw_main_title():
-    text_width, text_height = title_font.size("Chess")
+    chess_font_width, _ = title_font.size(constants.TITLE_CHESS)
+    start_font_width, _ = start_font.size(constants.TITLE_START_SPACE)
+    center_x = WINDOW_X/2
 
-    draw_text("py", start_font, constants.BLACK, WINDOW_X * 0.19, WINDOW_Y * 0.13)
-    draw_text("Chess", title_font, constants.BLACK, (constants.CENTER_X - text_width / 2), (constants.CENTER_Y - text_height / 2))
-    draw_text("Press Space to advance", start_font, constants.BLACK, WINDOW_X * 0.31, WINDOW_Y * 0.83)
+
+    draw_text(constants.TITLE_PY, start_font, constants.BLACK, WINDOW_X * 0.19, WINDOW_Y * 0.13)
+    draw_text(constants.TITLE_CHESS, title_font, constants.BLACK, (center_x - chess_font_width / 2), WINDOW_Y * 0.20)
+    draw_text(constants.TITLE_START_SPACE, start_font, constants.BLACK, (center_x - start_font_width / 2), WINDOW_Y * 0.80)
 
 def draw_main_menu():
     global play_button
@@ -86,23 +90,24 @@ def draw_scene(scene_state):
         draw_chess_board()
 
 def calculate_new_window_size(event):
+            global WINDOW_X
+            global WINDOW_Y
+
             new_width, new_height = event.size
             
-            # Calculate the aspect ratio of the new window
             aspect_ratio = new_width / new_height
             
-            # If the aspect ratio of the new window doesn't match the aspect ratio of the game
-            if aspect_ratio != constants.ASPECT_RATIO[0] / constants.ASPECT_RATIO[1]:
-                # Calculate the new width and height of the window to maintain the aspect ratio
+            if aspect_ratio != constants.ASPECT_RATIO[0] /constants.ASPECT_RATIO[1]:
                 if aspect_ratio > constants.ASPECT_RATIO[0] / constants.ASPECT_RATIO[1]:
                     new_height = int(new_width / constants.ASPECT_RATIO[0] * constants.ASPECT_RATIO[1])
                 else:
                     new_width = int(new_height * constants.ASPECT_RATIO[0] / constants.ASPECT_RATIO[1])
             
-            # Resize the window to the new size
             WINDOW_X = new_width
             WINDOW_Y = new_height
+            # Resize the window to the new size
             pygame.display.set_mode((new_width, new_height), pygame.RESIZABLE)
+            reset_screen()
 
 
 if __name__ == "__main__":
@@ -114,15 +119,14 @@ if __name__ == "__main__":
     
     chess_game = chess.Chess()
 
-    title_font = pygame.font.SysFont("arial", constants.TITLE_FONT_SIZE)
-    start_font = pygame.font.SysFont("arial", 25)
-    button_font = pygame.font.SysFont("arial", 50)
+    title_font = pygame.font.SysFont("arial", math.floor(WINDOW_X * 0.20))
+    start_font = pygame.font.SysFont("arial", math.floor(WINDOW_X * 0.05))
+    button_font = pygame.font.SysFont("arial", math.floor(WINDOW_X * 0.10))
 
     reset_screen()
     running = True
     while running:
         draw_scene(current_state)
-
         for event in pygame.event.get():
             if event.type == VIDEORESIZE:
                 calculate_new_window_size(event)
