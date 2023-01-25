@@ -1,29 +1,28 @@
-import math
-
 """
 Game Config Related Constants
 """
-#Window Size
-ASPECT_RATIO = (4,3)
+# Window Size
+ASPECT_RATIO = (4, 3)
 GAME_FPS = 60
+DEFAULT_FONT = 'arial'
 
-#Scaling factors
+# Scaling factors
 
-#RGB values
+# RGB values
 WHITE = (255, 255, 255)
 CHESS_BOARD_WHITE = (250, 250, 250)
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 128)
 
-#Chess board square size
+# Chess board square size
 CHESS_BOARD_SQUARE_SIZE = 62.5
 CHESS_BOARD_OFFSET = 90
 
 """
 String Literals
 """
-#Piece Names
+# Piece Names
 BISHOP_NAME = "bishop"
 KING_NAME = "king"
 KNIGHT_NAME = "Knight"
@@ -31,7 +30,7 @@ PAWN_NAME = "pawn"
 ROOK_NAME = "rook"
 QUEEN_NAME = "queen"
 
-#Title_Texts
+# Title_Texts
 TITLE_CHESS = "Chess"
 TITLE_PY = "py"
 TITLE_START_SPACE = "Press Space to advance"
