@@ -36,6 +36,8 @@ class TitleScreen(Scene):
                                floor(pygame.display.Info().current_w * 0.20))
         self.start_text = Text(constants.TITLE_START_SPACE,
                                floor(pygame.display.Info().current_w * 0.05))
+        self.start_text_blinking = 1
+        self.start_sound = pygame.mixer.Sound("assets/sounds/start_sound.wav")
 
     def render(self, screen):
         screen.fill(constants.WHITE)
@@ -55,13 +57,23 @@ class TitleScreen(Scene):
         current_w = pygame.display.Info().current_w
         self.py_text.update(floor(current_w * 0.05))
         self.title_text.update(floor(current_w * 0.20))
+
+        self.calculate_blinking_animation(self.start_text.color)
+        self.start_text.color = tuple(rgb + self.start_text_blinking for rgb in self.start_text.color)
         self.start_text.update(floor(current_w * 0.05))
     
+    def calculate_blinking_animation(self, color_value_tuple):
+        if(color_value_tuple == constants.WHITE):
+            self.start_text_blinking = -3
+        elif(color_value_tuple == constants.BLACK):
+            self.start_text_blinking = 3
 
 
     def handle_events(self, events):
         for event in events:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                pygame.mixer.Sound.play(self.start_sound)
+                pygame.time.delay(1000)
                 self.manager.go_to(MainMenuScreen())
             
 
@@ -86,3 +98,5 @@ class MainMenuScreen(Scene):
         for event in events:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
                 self.manager.go_to(TitleScreen())
+                
+ 
