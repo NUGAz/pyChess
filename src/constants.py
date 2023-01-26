@@ -5,6 +5,7 @@ Game Config Related Constants
 ASPECT_RATIO = (4, 3)
 GAME_FPS = 60
 DEFAULT_FONT = 'arial'
+DEFAULT_WINDOW_SIZE = (1000, 750)
 
 # Scaling factors
 
