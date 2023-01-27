@@ -5,11 +5,6 @@ import math
 
 from pygame.locals import *
 
-def draw_text(text, font, text_color, x, y):
-    img = font.render(text, True, text_color)
-    screen.blit(img, (x, y))
-
-
 def draw_rect(x, y, width, height, color):
     rect = pygame.Rect(x, y, width, height)
     pygame.draw.rect(screen, color, rect)
@@ -23,14 +18,6 @@ def draw_button(x, y, width, height, color, text):
 
 def draw_line(start_x, start_y, end_x, end_y, color):
     pygame.draw.line(screen, color, (start_x, start_y), (end_x, end_y))
-
-def draw_main_menu():
-    draw_text("py", title_font, constants.BLACK, 150, 20)
-    draw_text("Chess", title_font, constants.BLACK, 250, 100)
-
-    play_button = draw_button(350, 400, 100, 50, constants.WHITE, "Play")
-    exit_button = draw_button(350, 500, 100, 50, constants.WHITE, "Exit")
-
 
 def draw_chess_board():
     square_size = constants.CHESS_BOARD_SQUARE_SIZE
@@ -91,7 +78,6 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode(constants.DEFAULT_WINDOW_SIZE, pygame.RESIZABLE)
 
     scene_manager = SceneManager()
-    #button_font = pygame.font.SysFont("arial", math.floor(WINDOW_X * 0.10))
 
     running = True
     while running:

@@ -1,3 +1,4 @@
+from os import path
 """
 Game Config Related Constants
 """
@@ -7,7 +8,21 @@ GAME_FPS = 60
 DEFAULT_FONT = 'arial'
 DEFAULT_WINDOW_SIZE = (1000, 750)
 
-# Scaling factors
+"""
+File and Folder Costants
+"""
+# Folders
+SOUND_FX_PATH = "assets/sounds/"
+ICONS_PATH = "assets/icons/"
+
+#SOUND_FX_PATH = path.dirname(__file__)
+#ICONS_PATH = path.dirname(__file__)
+
+#Sound Files
+START_SOUND_EFFECT = "start_sound.wav"
+
+#Image Files
+CHESS_BG = "chess_bg.png"
 
 # RGB values
 WHITE = (255, 255, 255)
