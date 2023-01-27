@@ -1,11 +1,13 @@
-from ui_elements import Text
+from ui_elements import Text, Button
 from math import floor
+import utils
 import constants
 import pygame
 
 
 class Scene():
     def __init__(self):
+        # __init__ is empty because this is an abstract class and I don't want/need to use abc
         pass
 
     def render(self, screen):
@@ -30,37 +32,31 @@ class SceneManager():
 class TitleScreen(Scene):
     def __init__(self):
         super(TitleScreen, self).__init__()
-        self.py_text = Text(constants.TITLE_PY,
-                            floor(pygame.display.Info().current_w * 0.05))
-        self.title_text = Text(constants.TITLE_CHESS,
-                               floor(pygame.display.Info().current_w * 0.20))
-        self.start_text = Text(constants.TITLE_START_SPACE,
-                               floor(pygame.display.Info().current_w * 0.05))
+        self.py_text = Text(0, 0, 0, 0, constants.TITLE_PY, floor(pygame.display.Info().current_w * 0.05))
+        self.title_text = Text(0, 0, 0, 0, constants.TITLE_CHESS, floor(pygame.display.Info().current_w * 0.20))
+        self.start_text = Text(0, 0, 0, 0, constants.TITLE_START_SPACE, floor(pygame.display.Info().current_w * 0.05))
+
         self.start_text_blinking = 1
-        self.start_sound = pygame.mixer.Sound("assets/sounds/start_sound.wav")
+        self.start_sound = pygame.mixer.Sound(constants.SOUND_FX_PATH + constants.START_SOUND_EFFECT)
 
     def render(self, screen):
         screen.fill(constants.WHITE)
 
-        window_x = pygame.display.Info().current_w
-        window_y = pygame.display.Info().current_h
-
-        center_x = window_x/2
-
-        screen.blit(self.py_text.image, ((center_x - (self.title_text.rect.centerx + self.py_text.rect.right * 0.70)), window_y * 0.20))
-        screen.blit(self.title_text.image,
-                    ((center_x - self.title_text.rect.centerx), window_y * 0.20))
-        screen.blit(self.start_text.image,
-                    ((center_x - self.start_text.rect.centerx), window_y * 0.80))
+        self.py_text.draw(screen)
+        self.title_text.draw(screen)
+        self.start_text.draw(screen)
 
     def update(self):
         current_w = pygame.display.Info().current_w
-        self.py_text.update(floor(current_w * 0.05))
-        self.title_text.update(floor(current_w * 0.20))
+        window_y = pygame.display.Info().current_h
+        center_x = current_w/2
+
+        self.py_text.update(center_x - (self.title_text.rect.centerx + self.py_text.rect.right * 0.70), window_y * 0.20, floor(current_w * 0.05))
+        self.title_text.update(center_x - self.title_text.rect.centerx, window_y * 0.20, floor(current_w * 0.20))
 
         self.calculate_blinking_animation(self.start_text.color)
-        self.start_text.color = tuple(rgb + self.start_text_blinking for rgb in self.start_text.color)
-        self.start_text.update(floor(current_w * 0.05))
+        self.start_text.color = utils.add_to_tuple(self.start_text_blinking, self.start_text.color)
+        self.start_text.update(center_x - self.start_text.rect.centerx, window_y * 0.80 ,floor(current_w * 0.05))
     
     def calculate_blinking_animation(self, color_value_tuple):
         if(color_value_tuple == constants.WHITE):
@@ -81,18 +77,31 @@ class TitleScreen(Scene):
 class MainMenuScreen(Scene):
     def __init__(self):
         super(MainMenuScreen, self).__init__()
-        self.py_text = Text(constants.TITLE_PY,
-                            floor(pygame.display.Info().current_w * 0.05))
+        self.py_text = Text(0, 0, 0, 0, constants.TITLE_PY,
+                            floor(pygame.display.Info().current_w * 0.02))
+        self.title_text = Text(0, 0, 0, 0, constants.TITLE_CHESS,
+                               floor(pygame.display.Info().current_w * 0.10))
+        self.bg_image = pygame.transform.scale(pygame.image.load(constants.ICONS_PATH + constants.CHESS_BG).convert_alpha(),
+                                               (pygame.display.Info().current_w,pygame.display.Info().current_w))
+        
+        #self.play_button = Button(pygame.display.get_window_size(), text="Play", anchor="center")
+        
 
     def render(self, screen):
         screen.fill(constants.WHITE)
 
-        window_x = pygame.display.Info().current_w
-
-        screen.blit(self.py_text.image, (window_x * 0.19, window_x * 0.13))
-
+        screen.blit(self.bg_image,(0,0))
+        self.py_text.draw(screen)
+        self.title_text.draw(screen)
+    
+    
     def update(self):
-        pass
+        window_x = pygame.display.Info().current_w
+        window_y = pygame.display.Info().current_h
+        center_x = window_x/2 
+
+        self.py_text.update(center_x - (self.title_text.rect.centerx + self.py_text.rect.right * 0.70),window_y * 0.10 ,floor(window_x * 0.02))
+        self.title_text.update(center_x - self.title_text.rect.centerx, window_y * 0.10, floor(window_x * 0.10))
 
     def handle_events(self, events):
         for event in events:
