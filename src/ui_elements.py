@@ -1,35 +1,64 @@
 import pygame
-from constants import BLACK, DEFAULT_FONT
+from utils import add_tuples, sub_tuples
+from constants import BLACK, WHITE,  DEFAULT_FONT
 
-
-class Text(pygame.sprite.Sprite):
-    def __init__(self, text, size, color=BLACK, font=DEFAULT_FONT, **kwargs):
-        super(Text, self).__init__()
-        self.text = text
+class UiElement(pygame.sprite.Sprite):
+    def __init__(self, x, y, width, height, color):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
         self.color = color
-        self.font = pygame.font.SysFont(font, size)
-        self.kwargs = kwargs
+
+        def set():
+            raise NotImplementedError
+        
+        def draw(screen):
+            raise NotImplementedError
+        
+        def update():
+            raise NotImplementedError
+
+
+class Text(UiElement):
+    def __init__(self, x, y, width, height, text, font_size, color=BLACK, font=DEFAULT_FONT):
+        super().__init__(x, y, width, height, color)
+        self.text = text
+        self.font_size = font_size
+        self.font = pygame.font.SysFont(font, self.font_size)
         self.set()
 
     def set(self):
         self.image = self.font.render(str(self.text), True, self.color)
-        self.rect = self.image.get_rect(**self.kwargs)
+        self.rect = self.image.get_rect()
 
-    def update(self, size, font=DEFAULT_FONT):
-        self.font = pygame.font.SysFont(font, size)
+    def draw(self, screen):
+        screen.blit(self.image, (self.x, self.y))
+
+    def update(self, x, y, font_size, font=DEFAULT_FONT):
+        self.font_size = font_size
+        self.font = pygame.font.SysFont(font, self.font_size)
+        self.x = x
+        self.y = y
         self.set()
 
     def get_font_size(self):
         return self.font.size(self.text)
 
 
-class Button:
-    def __init__(self, surface, pos, text='', anchor='top-left'):
-        self.surface = surface
-        if anchor == 'center':
-            self.pos = tuple(
-                pos, (self.surface.get_width()/2, self.surface.get_height()/2))
+class Button(UiElement):
+    def __init__(self, x, y, width, height, color=WHITE, surface=None, text='', anchor='top-left'):
+        super().__init__(x, y, width, height, color)
+        if(surface == None):
+            self.surface = pygame.display.get_surface()
         else:
-            self.pos = pos
-        self.text = Text(text, add_tuple(self.pos, (self.surface.get_width(
-        )/2, self.surface.get_height()/2)), anchor='center')
+            self.surface = surface
+
+        self.text = Text(text, add_tuples(self.pos, (self.surface.get_width(
+        )/2, self.surface.get_height()/2)))
+
+        self.set()
+    
+    def set(self):
+        pygame.Rect(self.pos[0], self.pos[1], self.size[0] , self.size[0])
+    
