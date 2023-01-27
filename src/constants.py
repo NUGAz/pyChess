@@ -15,8 +15,8 @@ File and Folder Costants
 SOUND_FX_PATH = "assets/sounds/"
 ICONS_PATH = "assets/icons/"
 
-#SOUND_FX_PATH = path.dirname(__file__)
-#ICONS_PATH = path.dirname(__file__)
+#
+#SOUND_FX_PATH = path.dirname(__file__) #ICONS_PATH = path.dirname(__file__)
 
 #Sound Files
 START_SOUND_EFFECT = "start_sound.wav"
@@ -50,6 +50,11 @@ QUEEN_NAME = "queen"
 TITLE_CHESS = "Chess"
 TITLE_PY = "py"
 TITLE_START_SPACE = "Press Space to advance"
+
+#Main Menu Texts
+PLAY_BUTTON = "Play"
+OPTIONS_BUTTON = "Options"
+EXIT_BUTTON = "Exit"
 
 """
 Screen States
