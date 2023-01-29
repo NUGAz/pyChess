@@ -19,34 +19,32 @@ class UiElement(pygame.sprite.Sprite):
             pass
         
 class Text(UiElement):
-    def __init__(self, x, y, text, font_size, color=BLACK, font=DEFAULT_FONT):
+    def __init__(self, text, font_size, color=BLACK, font_name=DEFAULT_FONT):
         super().__init__(color)
         self.text = text
-        self.font_name = font
+        self.font_name = font_name
         self.font_size = font_size
-        self.font = pygame.font.SysFont(self.font_name, self.font_size)
-        self.image = self.font.render(self.text, True, self.color)
+        self.set_font()
         self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
 
-    def update(self, **kwargs):
-        if 'x' in kwargs:
-            self.rect.x = kwargs['x']
-        if 'y' in kwargs:
-            self.rect.y = kwargs['y']
-        if 'text' in kwargs:
-            self.text = kwargs['text']
-        if 'font_size' in kwargs:
-            self.font_size = kwargs['font_size']
-        if 'color' in kwargs:
-            self.color = kwargs['color']
-        if 'font_name' in kwargs:
-            self.font_name = kwargs['font_name']
-
+    def set_font(self):
         self.font = pygame.font.SysFont(self.font_name, self.font_size)
         self.image = self.font.render(self.text, True, self.color)
-        self.rect = self.image.get_rect(**kwargs)
+        
+    def update(self, **kwargs):
+        if 'pos' in kwargs:
+            pos = kwargs.pop('pos')
+            self.rect.update(pos[0], pos[1], self.rect.w, self.rect.h)
+        if 'text' in kwargs:
+            self.text = kwargs.pop('text')
+        if 'font_size' in kwargs:
+            self.font_size = kwargs.pop('font_size')
+            self.set_font()
+            self.rect.w, self.rect.h = self.image.get_width(), self.image.get_height()
+        if 'color' in kwargs:
+            self.color = kwargs.pop('color')
+        if 'font_name' in kwargs:
+            self.font_name = kwargs.pop('font_name')
 
     def get_font_size(self):
         return self.font.size(self.text)
