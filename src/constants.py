@@ -3,10 +3,10 @@ from os import path
 Game Config Related Constants
 """
 # Window Size
-ASPECT_RATIO = (4, 3)
+ASPECT_RATIO = (16, 9)
 GAME_FPS = 60
 DEFAULT_FONT = 'arial'
-DEFAULT_WINDOW_SIZE = (1000, 750)
+DEFAULT_WINDOW_SIZE = (1280, 720)
 
 """
 File and Folder Costants
