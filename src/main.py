@@ -55,7 +55,7 @@ def draw_chess_board():
                   9 + offset, square_size*9, constants.BLACK)
 
 def calculate_new_window_size(event):
-    new_width, new_height = event.size
+    new_width, new_height = event[0].size
 
     aspect_ratio = new_width / new_height
 
@@ -78,13 +78,14 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode(constants.DEFAULT_WINDOW_SIZE, pygame.RESIZABLE)
 
     scene_manager = SceneManager()
+    event = pygame.event
 
     running = True
     while running:
         clock.tick(constants.GAME_FPS)
 
-        #if pygame.event.get(VIDEORESIZE)
-        #    calculate_new_window_size(pygame.event)
+        if pygame.event.peek(VIDEORESIZE):
+            calculate_new_window_size(pygame.event.get(VIDEORESIZE))
         if pygame.event.get(QUIT):
             running = False
             pygame.quit()

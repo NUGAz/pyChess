@@ -31,9 +31,9 @@ class SceneManager():
 class TitleScreen(Scene):
     def __init__(self):
         super().__init__()
-        self.py_text = Text(0, 0, constants.TITLE_PY, floor(pygame.display.Info().current_w * 0.05))
-        self.title_text = Text(0, 0, constants.TITLE_CHESS, floor(pygame.display.Info().current_w * 0.20))
-        self.start_text = Text(0, 0, constants.TITLE_START_SPACE, floor(pygame.display.Info().current_w * 0.05))
+        self.py_text = Text(constants.TITLE_PY, floor(pygame.display.Info().current_w * 0.05))
+        self.title_text = Text(constants.TITLE_CHESS, floor(pygame.display.Info().current_w * 0.20))
+        self.start_text = Text(constants.TITLE_START_SPACE, floor(pygame.display.Info().current_w * 0.05))
 
         self.sprite_group.add(self.py_text)
         self.sprite_group.add(self.title_text)
@@ -53,21 +53,18 @@ class TitleScreen(Scene):
         self.sprite_group.draw(screen)
 
     def update(self):
-        current_w = pygame.display.Info().current_w
+        window_x = pygame.display.Info().current_w
         window_y = pygame.display.Info().current_h
-        center_x = current_w/2
 
+        aspect_ratio = window_x / window_y
+        center_x = window_x/2
 
-        print(f"centerx: {self.title_text.rect.centerx}")
-        print(f"centery: {self.title_text.rect.centery}")
-        x=center_x - (self.title_text.rect.centerx + self.py_text.rect.right * 0.70)
-        y=window_y * 0.20
-        self.py_text.update(x=x, y=y, font_size=floor(current_w * 0.05))
-        self.title_text.update(x=center_x - self.title_text.rect.centerx, y=window_y * 0.20, font_size=floor(current_w * 0.20))
+        self.py_text.update(pos=(center_x/2.5, window_y * 0.12), font_size=floor(window_x * 0.03 * aspect_ratio))
+        self.title_text.update(pos=(center_x-self.title_text.rect.width/2, window_y * 0.15), font_size=floor(window_x * 0.10 * aspect_ratio))
 
         self.calculate_blinking_animation(self.start_text.color)
         self.start_text.color = utils.add_to_tuple(self.start_text_blinking, self.start_text.color)
-        self.start_text.update(x=center_x - self.start_text.rect.centerx, y=window_y * 0.80, font_size=floor(current_w * 0.05))
+        self.start_text.update(pos=(center_x - self.start_text.rect.width/2, window_y * 0.80), font_size=floor(window_x * 0.03 * aspect_ratio))
     
     def calculate_blinking_animation(self, color_value_tuple):
         if(color_value_tuple == constants.WHITE):
