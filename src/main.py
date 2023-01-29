@@ -1,13 +1,11 @@
 import pygame
 from scenes import SceneManager
 import constants
-import math
 
-from pygame.locals import *
 
 def draw_rect(x, y, width, height, color):
     rect = pygame.Rect(x, y, width, height)
-    pygame.draw.rect(screen, color, rect)
+    return pygame.draw.rect(screen, color, rect)
 
 
 def draw_button(x, y, width, height, color, text):
@@ -16,8 +14,10 @@ def draw_button(x, y, width, height, color, text):
     draw_text(text, button_font, constants.BLACK, x, y)
     return button
 
+
 def draw_line(start_x, start_y, end_x, end_y, color):
     pygame.draw.line(screen, color, (start_x, start_y), (end_x, end_y))
+
 
 def draw_chess_board():
     square_size = constants.CHESS_BOARD_SQUARE_SIZE
@@ -54,8 +54,9 @@ def draw_chess_board():
         draw_line(size_offseted, square_size*9, square_size *
                   9 + offset, square_size*9, constants.BLACK)
 
-def calculate_new_window_size(event):
-    new_width, new_height = event[0].size
+
+def calculate_new_window_size(resizable_event):
+    new_width, new_height = resizable_event[0].size
 
     aspect_ratio = new_width / new_height
 
@@ -67,7 +68,6 @@ def calculate_new_window_size(event):
             new_width = int(
                 new_height * constants.ASPECT_RATIO[0] / constants.ASPECT_RATIO[1])
 
-    # Resize the window to the new size
     pygame.display.set_mode((new_width, new_height), pygame.RESIZABLE)
 
 
@@ -75,22 +75,23 @@ if __name__ == "__main__":
     pygame.init()
     pygame.display.set_caption('Welcome to pyChess')
     clock = pygame.time.Clock()
-    screen = pygame.display.set_mode(constants.DEFAULT_WINDOW_SIZE, pygame.RESIZABLE)
+    screen = pygame.display.set_mode(
+        constants.DEFAULT_WINDOW_SIZE, pygame.RESIZABLE)
 
     scene_manager = SceneManager()
     event = pygame.event
 
-    running = True
-    while running:
+    RUNNING = True
+    while RUNNING:
         clock.tick(constants.GAME_FPS)
 
-        if pygame.event.peek(VIDEORESIZE):
-            calculate_new_window_size(pygame.event.get(VIDEORESIZE))
-        if pygame.event.get(QUIT):
-            running = False
+        if pygame.event.peek(pygame.VIDEORESIZE):
+            calculate_new_window_size(pygame.event.get(pygame.VIDEORESIZE))
+        if pygame.event.get(pygame.QUIT):
+            RUNNING = False
             pygame.quit()
 
-        if running:
+        if RUNNING:
             scene_manager.scene.handle_events(pygame.event.get())
             scene_manager.scene.update()
             scene_manager.scene.render(screen)

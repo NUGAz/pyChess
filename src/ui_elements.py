@@ -2,6 +2,7 @@ import pygame
 from utils import add_tuples, sub_tuples
 from constants import BLACK, WHITE, DEFAULT_FONT
 
+
 class UiElement(pygame.sprite.Sprite):
     def __init__(self, color):
         pygame.sprite.Sprite.__init__(self)
@@ -11,13 +12,14 @@ class UiElement(pygame.sprite.Sprite):
 
         def set():
             raise NotImplementedError
-        
+
         def draw(screen):
             screen.blit(self.image, self.rect)
-        
+
         def update():
             pass
-        
+
+
 class Text(UiElement):
     def __init__(self, text, font_size, color=BLACK, font_name=DEFAULT_FONT):
         super().__init__(color)
@@ -30,7 +32,7 @@ class Text(UiElement):
     def set_font(self):
         self.font = pygame.font.SysFont(self.font_name, self.font_size)
         self.image = self.font.render(self.text, True, self.color)
-        
+
     def update(self, **kwargs):
         if 'pos' in kwargs:
             pos = kwargs.pop('pos')
@@ -53,7 +55,7 @@ class Text(UiElement):
 class Button(UiElement):
     def __init__(self, x, y, color=WHITE, surface=None, text='', font_size=0, anchor='top-left'):
         super().__init__(x, y, color)
-        if(surface == None):
+        if (surface == None):
             self.surface = pygame.display.get_surface()
         else:
             self.surface = surface
@@ -62,10 +64,10 @@ class Button(UiElement):
                          0, 0, text, font_size)
 
         self.set()
-    
+
     def set(self):
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.text.set()
-    
+
     def draw(self, screen):
         screen.blit(self.rect, (self.x, self.y))
