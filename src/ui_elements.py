@@ -1,29 +1,27 @@
 import pygame
-from utils import add_tuples, sub_tuples
-from constants import BLACK, WHITE, DEFAULT_FONT
+from constants import BLACK, WHITE, DEFAULT_FONT, CENTER, TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
 
 
-class UiElement(pygame.sprite.Sprite):
-    def __init__(self, color):
-        pygame.sprite.Sprite.__init__(self)
+class UiElement():
+    def __init__(self):
         self.image = None
         self.rect = None
-        self.color = color
 
         def set():
             raise NotImplementedError
 
-        def draw(screen):
-            screen.blit(self.image, self.rect)
+        def draw(self, screen):
+            raise NotImplementedError
 
         def update():
-            pass
+            raise NotImplementedError
 
 
 class Text(UiElement):
     def __init__(self, text, font_size, color=BLACK, font_name=DEFAULT_FONT):
-        super().__init__(color)
+        super().__init__()
         self.text = text
+        self.color = color
         self.font_name = font_name
         self.font_size = font_size
         self.set_font()
@@ -34,8 +32,8 @@ class Text(UiElement):
         self.image = self.font.render(self.text, True, self.color)
 
     def update(self, **kwargs):
-        if 'pos' in kwargs:
-            pos = kwargs.pop('pos')
+        if 'text_pos' in kwargs:
+            pos = kwargs.pop('text_pos')
             self.rect.update(pos[0], pos[1], self.rect.w, self.rect.h)
         if 'text' in kwargs:
             self.text = kwargs.pop('text')
@@ -43,31 +41,67 @@ class Text(UiElement):
             self.font_size = kwargs.pop('font_size')
             self.set_font()
             self.rect.w, self.rect.h = self.image.get_width(), self.image.get_height()
-        if 'color' in kwargs:
+        if 'text_color' in kwargs:
             self.color = kwargs.pop('color')
         if 'font_name' in kwargs:
             self.font_name = kwargs.pop('font_name')
+
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)
 
     def get_font_size(self):
         return self.font.size(self.text)
 
 
 class Button(UiElement):
-    def __init__(self, x, y, color=WHITE, surface=None, text='', font_size=0, anchor='top-left'):
-        super().__init__(x, y, color)
-        if (surface == None):
-            self.surface = pygame.display.get_surface()
-        else:
-            self.surface = surface
+    def __init__(self, text, color=WHITE, font_size=0, text_anchor=None):
+        super().__init__()
+        self.image = pygame.display.get_surface()
+        self.rect = pygame.Rect(0, 0, 0, 0)
+        self.color = color
+        self.text_anchor = text_anchor
+        self.text = Text(text, font_size)
+        self.text.set_font()
+        self.set_text_position()
 
-        self.text = Text(x + self.surface.get_width()/2, y + self.surface.get_height()/2,
-                         0, 0, text, font_size)
-
-        self.set()
-
-    def set(self):
-        self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
-        self.text.set()
+    def update(self, **kwargs):
+        if 'rect_pos' in kwargs:
+            pos = kwargs.pop('rect_pos')
+            self.rect.update(pos[0], pos[1], self.rect.w, self.rect.h)
+        if 'rect_size' in kwargs:
+            size = kwargs.pop('rect_size')
+            self.rect.update(self.rect.x, self.rect.y, size[0], size[1])
+        if 'rect_color' in kwargs:
+            self.color = kwargs.pop('color')
+        self.text.update(**kwargs)
+        self.set_text_position()
 
     def draw(self, screen):
-        screen.blit(self.rect, (self.x, self.y))
+        pygame.draw.rect(screen, self.color, self.rect)
+        self.text.draw(screen)
+
+    def set_text_position(self):
+        if self.text_anchor is None:  # free positioning
+            pass
+        elif self.text_anchor == CENTER:
+            x_pos = (self.rect.x + self.rect.w/2) - self.text.rect.w/2
+            y_pos = (self.rect.y + self.rect.h/2) - \
+                self.text.rect.h/2
+            self.text.rect.update(
+                x_pos, y_pos, self.text.rect.w, self.text.rect.h)
+        elif self.text_anchor == TOP_LEFT:
+            self.text.rect.update(self.rect.x, self.rect.y,
+                                  self.text.rect.w, self.text.rect.h)
+        elif self.text_anchor == TOP_RIGHT:
+            x_pos = self.rect.x + (self.rect.w - self.text.rect.w)
+            self.text.rect.update(x_pos, self.rect.y,
+                                  self.text.rect.w, self.text.rect.h)
+        elif self.text_anchor == BOTTOM_LEFT:
+            y_pos = self.rect.y + (self.rect.h - self.text.rect.h)
+            self.text.rect.update(self.rect.x, y_pos,
+                                  self.text.rect.w, self.text.rect.h)
+        elif self.text_anchor == BOTTOM_RIGHT:
+            x_pos = self.rect.x + (self.rect.w - self.text.rect.w)
+            y_pos = self.rect.y + (self.rect.h - self.text.rect.h)
+            self.text.rect.update(x_pos, y_pos,
+                                  self.text.rect.w, self.text.rect.h)
