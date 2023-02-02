@@ -16,12 +16,12 @@ SOUND_FX_PATH = "assets/sounds/"
 ICONS_PATH = "assets/icons/"
 
 #
-#SOUND_FX_PATH = path.dirname(__file__) #ICONS_PATH = path.dirname(__file__)
+# SOUND_FX_PATH = path.dirname(__file__) #ICONS_PATH = path.dirname(__file__)
 
-#Sound Files
+# Sound Files
 START_SOUND_EFFECT = "start_sound.wav"
 
-#Image Files
+# Image Files
 CHESS_BG = "chess_bg.png"
 
 # RGB values
@@ -51,10 +51,17 @@ TITLE_CHESS = "Chess"
 TITLE_PY = "py"
 TITLE_START_SPACE = "Press Space to advance"
 
-#Main Menu Texts
+# Main Menu Texts
 PLAY_BUTTON = "Play"
 OPTIONS_BUTTON = "Options"
 EXIT_BUTTON = "Exit"
+
+# Anchors
+CENTER = "center"
+TOP_LEFT = "top-left"
+TOP_RIGHT = "top-right"
+BOTTOM_RIGHT = "bottom-right"
+BOTTOM_LEFT = "bottom-left"
 
 """
 Screen States
