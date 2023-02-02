@@ -1,13 +1,13 @@
 from math import floor
 import pygame
-from ui_elements import Text, Button
+from ui_elements import UiElement, Text, Button
 import utils
 import constants
 
 
 class Scene():
     def __init__(self):
-        self.sprite_group = pygame.sprite.Group()
+        pass
 
     def render(self, screen):
         raise NotImplementedError
@@ -21,7 +21,8 @@ class Scene():
 
 class SceneManager():
     def __init__(self):
-        self.go_to(TitleScreen())
+        # self.go_to(TitleScreen())
+        self.go_to(MainMenuScreen())
 
     def go_to(self, scene):
         self.scene = scene
@@ -38,17 +39,16 @@ class TitleScreen(Scene):
         self.start_text = Text(constants.TITLE_START_SPACE, floor(
             pygame.display.Info().current_w * 0.05))
 
-        self.sprite_group.add(self.py_text)
-        self.sprite_group.add(self.title_text)
-        self.sprite_group.add(self.start_text)
-
         self.start_text_blinking = 1
         self.start_sound = pygame.mixer.Sound(
             constants.SOUND_FX_PATH + constants.START_SOUND_EFFECT)
 
     def render(self, screen):
         screen.fill(constants.WHITE)
-        self.sprite_group.draw(screen)
+
+        self.py_text.draw(screen)
+        self.title_text.draw(screen)
+        self.start_text.draw(screen)
 
     def update(self):
         window_x = pygame.display.Info().current_w
@@ -57,15 +57,15 @@ class TitleScreen(Scene):
         aspect_ratio = window_x / window_y
         center_x = window_x/2
 
-        self.py_text.update(pos=(center_x/2.5, window_y * 0.12),
+        self.py_text.update(text_pos=(center_x/2.5, window_y * 0.12),
                             font_size=floor(window_x * 0.03 * aspect_ratio))
-        self.title_text.update(pos=(center_x-self.title_text.rect.width/2,
+        self.title_text.update(text_pos=(center_x-self.title_text.rect.width/2,
                                window_y * 0.15), font_size=floor(window_x * 0.10 * aspect_ratio))
 
         self.calculate_blinking_animation(self.start_text.color)
         self.start_text.color = utils.add_to_tuple(
             self.start_text_blinking, self.start_text.color)
-        self.start_text.update(pos=(center_x - self.start_text.rect.width/2,
+        self.start_text.update(text_pos=(center_x - self.start_text.rect.width/2,
                                window_y * 0.80), font_size=floor(window_x * 0.03 * aspect_ratio))
 
     def calculate_blinking_animation(self, color_value_tuple):
@@ -85,36 +85,62 @@ class TitleScreen(Scene):
 class MainMenuScreen(Scene):
     def __init__(self):
         super().__init__()
-        self.py_text = Text(0, 0, constants.TITLE_PY,
-                            floor(pygame.display.Info().current_w * 0.02))
-        self.title_text = Text(0, 0, constants.TITLE_CHESS,
+        self.py_text = Text(constants.TITLE_PY, floor(
+            pygame.display.Info().current_w * 0.02))
+        self.title_text = Text(constants.TITLE_CHESS,
                                floor(pygame.display.Info().current_w * 0.10))
         self.bg_image = pygame.transform.scale(pygame.image.load(constants.ICONS_PATH + constants.CHESS_BG).convert_alpha(),
                                                (pygame.display.Info().current_w, pygame.display.Info().current_w))
-        self.sprite_group.add(self.py_text)
-        self.sprite_group.add(self.title_text)
 
-        self.play_button = Button(0, 0, 0, 0, pygame.display.get_window_size(
-        ), text=constants.PLAY_BUTTON, anchor="center")
+        self.play_button = Button(
+            constants.PLAY_BUTTON, text_anchor=constants.CENTER)
+        self.options_button = Button(
+            constants.OPTIONS_BUTTON, text_anchor=constants.CENTER)
+        self.exit_button = Button(
+            constants.EXIT_BUTTON, text_anchor=constants.CENTER)
 
     def render(self, screen):
         screen.fill(constants.WHITE)
 
-        screen.blit(self.bg_image, (0, 0))
-        self.sprite_group.draw(screen)
-        # self.py_text.draw(screen)
-        # self.title_text.draw(screen)
+        self.py_text.draw(screen)
+        self.title_text.draw(screen)
+
+        self.play_button.draw(screen)
+        self.options_button.draw(screen)
+        self.exit_button.draw(screen)
 
     def update(self):
         window_x = pygame.display.Info().current_w
         window_y = pygame.display.Info().current_h
+
+        aspect_ratio = window_x / window_y
         center_x = window_x/2
 
-        self.py_text.update(center_x - (self.title_text.rect.centerx +
-                            self.py_text.rect.right * 0.70), window_y * 0.10, floor(window_x * 0.02))
-        self.title_text.update(
-            center_x - self.title_text.rect.centerx, window_y * 0.10, floor(window_x * 0.10))
-        self.play_button.update()
+        self.py_text.update(text_pos=(center_x/1.45, window_y * 0.09),
+                            font_size=floor(window_x * 0.015 * aspect_ratio))
+        self.title_text.update(text_pos=(center_x-self.title_text.rect.w/2,
+                               window_y * 0.10), font_size=floor(window_x * 0.05 * aspect_ratio))
+
+        self.play_button.update(
+            rect_pos=(center_x-self.play_button.rect.w / 2,
+                      window_y * 0.25 * aspect_ratio),
+            rect_size=(window_x * 0.07 * aspect_ratio,
+                       window_y * 0.07 * aspect_ratio),
+            font_size=floor(window_x * 0.03 * aspect_ratio))
+
+        self.options_button.update(
+            rect_pos=(center_x-self.options_button.rect.w / 2,
+                      window_y * 0.35 * aspect_ratio),
+            rect_size=(window_x * 0.1 * aspect_ratio,
+                       window_y * 0.07 * aspect_ratio),
+            font_size=floor(window_x * 0.03 * aspect_ratio))
+
+        self.exit_button.update(
+            rect_pos=(center_x-self.exit_button.rect.w / 2,
+                      window_y * 0.45 * aspect_ratio),
+            rect_size=(window_x * 0.07 * aspect_ratio,
+                       window_y * 0.07 * aspect_ratio),
+            font_size=floor(window_x * 0.03 * aspect_ratio))
 
     def handle_events(self, events):
         for event in events:
