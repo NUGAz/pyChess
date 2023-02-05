@@ -21,8 +21,7 @@ class Scene():
 
 class SceneManager():
     def __init__(self):
-        # self.go_to(TitleScreen())
-        self.go_to(MainMenuScreen())
+        self.go_to(TitleScreen())
 
     def go_to(self, scene):
         self.scene = scene
@@ -144,5 +143,16 @@ class MainMenuScreen(Scene):
 
     def handle_events(self, events):
         for event in events:
+            mouse_pos = pygame.mouse.get_pos()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
                 self.manager.go_to(TitleScreen())
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if self.play_button.is_mouse_over(mouse_pos):
+                    # go to board screen for now
+                    pass
+                elif self.options_button.is_mouse_over(mouse_pos):
+                    # go to options scene
+                    pass
+                elif self.exit_button.is_mouse_over(mouse_pos):
+                    pygame.quit()
