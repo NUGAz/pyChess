@@ -6,6 +6,7 @@ class UiElement():
     def __init__(self):
         self.image = None
         self.rect = None
+        self.a = pygame.sprite.Sprite()
 
         def set():
             raise NotImplementedError
@@ -79,6 +80,12 @@ class Button(UiElement):
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, self.rect)
         self.text.draw(screen)
+
+    def is_mouse_over(self, pos):
+        if pos[0] > self.rect.x and pos[0] < self.rect.x + self.rect.w:
+            if pos[1] > self.rect.y and pos[1] < self.rect.y + self.rect.h:
+                return True
+        return False
 
     def set_text_position(self):
         if self.text_anchor is None:  # free positioning
