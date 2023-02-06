@@ -3,56 +3,8 @@ from scenes import SceneManager
 import constants
 
 
-def draw_rect(x, y, width, height, color):
-    rect = pygame.Rect(x, y, width, height)
-    return pygame.draw.rect(screen, color, rect)
-
-
-def draw_button(x, y, width, height, color, text):
-    button = pygame.Rect(x, y, width, height)
-    pygame.draw.rect(screen, color, button)
-    draw_text(text, button_font, constants.BLACK, x, y)
-    return button
-
-
 def draw_line(start_x, start_y, end_x, end_y, color):
     pygame.draw.line(screen, color, (start_x, start_y), (end_x, end_y))
-
-
-def draw_chess_board():
-    square_size = constants.CHESS_BOARD_SQUARE_SIZE
-    offset = constants.CHESS_BOARD_OFFSET
-    size_offseted = square_size + offset
-    square_color_1 = constants.CHESS_BOARD_WHITE
-    square_color_2 = constants.BLACK
-
-    for i in range(1, 9):
-        for j in range(1, 9, 2):
-            x_pos = square_size * j + offset
-            chess_game.rect_grid[i-1][j-1] = draw_rect(
-                x_pos, square_size * i, square_size, square_size, square_color_1)
-            chess_game.rect_grid[i-1][j] = draw_rect(
-                x_pos + square_size, square_size * i, square_size, square_size, square_color_2)
-
-        temp_color = square_color_1
-        square_color_1 = square_color_2
-        square_color_2 = temp_color
-
-        # top horizontal
-        draw_line(size_offseted, square_size, square_size *
-                  9 + offset, square_size, constants.BLACK)
-
-        # left vertical
-        draw_line(size_offseted, square_size, size_offseted,
-                  square_size*9, constants.BLACK)
-
-        # right vertical
-        draw_line(square_size*9 + offset, square_size, square_size *
-                  9 + offset, square_size*9, constants.BLACK)
-
-        # bottom horizontal
-        draw_line(size_offseted, square_size*9, square_size *
-                  9 + offset, square_size*9, constants.BLACK)
 
 
 def calculate_new_window_size(resizable_event):
