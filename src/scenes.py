@@ -1,6 +1,7 @@
 from math import floor
 import pygame
-from ui_elements import UiElement, Text, Button
+from ui_elements import Text, Button
+from board import Board
 import utils
 import constants
 
@@ -21,7 +22,7 @@ class Scene():
 
 class SceneManager():
     def __init__(self):
-        self.go_to(TitleScreen())
+        self.go_to(GameScene())
 
     def go_to(self, scene):
         self.scene = scene
@@ -53,19 +54,18 @@ class TitleScreen(Scene):
         window_x = pygame.display.Info().current_w
         window_y = pygame.display.Info().current_h
 
-        aspect_ratio = window_x / window_y
         center_x = window_x/2
 
         self.py_text.update(text_pos=(center_x/2.5, window_y * 0.12),
-                            font_size=floor(window_x * 0.03 * aspect_ratio))
+                            font_size=floor(window_x * 0.03 * constants.ASPECT_RATIO_FRACTION))
         self.title_text.update(text_pos=(center_x-self.title_text.rect.width/2,
-                               window_y * 0.15), font_size=floor(window_x * 0.10 * aspect_ratio))
+                               window_y * 0.15), font_size=floor(window_x * 0.10 * constants.ASPECT_RATIO_FRACTION))
 
         self.calculate_blinking_animation(self.start_text.color)
         self.start_text.color = utils.add_to_tuple(
             self.start_text_blinking, self.start_text.color)
         self.start_text.update(text_pos=(center_x - self.start_text.rect.width/2,
-                               window_y * 0.80), font_size=floor(window_x * 0.03 * aspect_ratio))
+                               window_y * 0.80), font_size=floor(window_x * 0.03 * constants.ASPECT_RATIO_FRACTION))
 
     def calculate_blinking_animation(self, color_value_tuple):
         if (color_value_tuple == constants.WHITE):
@@ -112,34 +112,33 @@ class MainMenuScreen(Scene):
         window_x = pygame.display.Info().current_w
         window_y = pygame.display.Info().current_h
 
-        aspect_ratio = window_x / window_y
         center_x = window_x/2
 
         self.py_text.update(text_pos=(center_x/1.45, window_y * 0.09),
-                            font_size=floor(window_x * 0.015 * aspect_ratio))
+                            font_size=floor(window_x * 0.015 * constants.ASPECT_RATIO_FRACTION))
         self.title_text.update(text_pos=(center_x-self.title_text.rect.w/2,
-                               window_y * 0.10), font_size=floor(window_x * 0.05 * aspect_ratio))
+                               window_y * 0.10), font_size=floor(window_x * 0.05 * constants.ASPECT_RATIO_FRACTION))
 
         self.play_button.update(
             rect_pos=(center_x-self.play_button.rect.w / 2,
-                      window_y * 0.25 * aspect_ratio),
-            rect_size=(window_x * 0.07 * aspect_ratio,
-                       window_y * 0.07 * aspect_ratio),
-            font_size=floor(window_x * 0.03 * aspect_ratio))
+                      window_y * 0.25 * constants.ASPECT_RATIO_FRACTION),
+            rect_size=(window_x * 0.07 * constants.ASPECT_RATIO_FRACTION,
+                       window_y * 0.07 * constants.ASPECT_RATIO_FRACTION),
+            font_size=floor(window_x * 0.03 * constants.ASPECT_RATIO_FRACTION))
 
         self.options_button.update(
             rect_pos=(center_x-self.options_button.rect.w / 2,
-                      window_y * 0.35 * aspect_ratio),
-            rect_size=(window_x * 0.1 * aspect_ratio,
-                       window_y * 0.07 * aspect_ratio),
-            font_size=floor(window_x * 0.03 * aspect_ratio))
+                      window_y * 0.35 * constants.ASPECT_RATIO_FRACTION),
+            rect_size=(window_x * 0.1 * constants.ASPECT_RATIO_FRACTION,
+                       window_y * 0.07 * constants.ASPECT_RATIO_FRACTION),
+            font_size=floor(window_x * 0.03 * constants.ASPECT_RATIO_FRACTION))
 
         self.exit_button.update(
             rect_pos=(center_x-self.exit_button.rect.w / 2,
-                      window_y * 0.45 * aspect_ratio),
-            rect_size=(window_x * 0.07 * aspect_ratio,
-                       window_y * 0.07 * aspect_ratio),
-            font_size=floor(window_x * 0.03 * aspect_ratio))
+                      window_y * 0.45 * constants.ASPECT_RATIO_FRACTION),
+            rect_size=(window_x * 0.07 * constants.ASPECT_RATIO_FRACTION,
+                       window_y * 0.07 * constants.ASPECT_RATIO_FRACTION),
+            font_size=floor(window_x * 0.03 * constants.ASPECT_RATIO_FRACTION))
 
     def handle_events(self, events):
         for event in events:
@@ -149,10 +148,38 @@ class MainMenuScreen(Scene):
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if self.play_button.is_mouse_over(mouse_pos):
-                    # go to board screen for now
+                    self.manager.go_to(GameScene())
                     pass
                 elif self.options_button.is_mouse_over(mouse_pos):
                     # go to options scene
                     pass
                 elif self.exit_button.is_mouse_over(mouse_pos):
                     pygame.quit()
+            if event.type == pygame.MOUSEMOTION:
+                if self.play_button.is_mouse_over(mouse_pos):
+                    self.play_button.text.color = constants.TEXT_MOUSE_OVER_GREEN
+                elif self.options_button.is_mouse_over(mouse_pos):
+                    self.options_button.text.color = constants.TEXT_MOUSE_OVER_GREEN
+                elif self.exit_button.is_mouse_over(mouse_pos):
+                    self.exit_button.text.color = constants.TEXT_MOUSE_OVER_GREEN
+                else:
+                    self.play_button.text.color = constants.BLACK
+                    self.options_button.text.color = constants.BLACK
+                    self.exit_button.text.color = constants.BLACK
+
+
+class GameScene(Scene):
+    def __init__(self):
+        super().__init__()
+        self.board = Board()
+
+    def render(self, screen):
+        # self.board.draw_chess_board(screen)
+        pass
+
+    def update(self):
+        self.board.initialize_chess_board()
+
+    def handle_events(self, events):
+        for event in events:
+            mouse_pos = pygame.mouse.get_pos()
