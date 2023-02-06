@@ -4,6 +4,7 @@ Game Config Related Constants
 """
 # Window Size
 ASPECT_RATIO = (16, 9)
+ASPECT_RATIO_FRACTION = 16/9
 GAME_FPS = 60
 DEFAULT_FONT = 'arial'
 DEFAULT_WINDOW_SIZE = (1280, 720)
@@ -14,6 +15,8 @@ File and Folder Costants
 # Folders
 SOUND_FX_PATH = "assets/sounds/"
 ICONS_PATH = "assets/icons/"
+PIECES_ICONS_PATH = "assets/icons/pieces_svg/"
+MERIDA_PIECES = PIECES_ICONS_PATH + "merida"
 
 #
 # SOUND_FX_PATH = path.dirname(__file__) #ICONS_PATH = path.dirname(__file__)
@@ -30,6 +33,7 @@ CHESS_BOARD_WHITE = (250, 250, 250)
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 128)
+TEXT_MOUSE_OVER_GREEN = (80, 255, 80)
 
 # Chess board square size
 CHESS_BOARD_SQUARE_SIZE = 62.5
