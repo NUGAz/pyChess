@@ -16,7 +16,7 @@ File and Folder Costants
 SOUND_FX_PATH = "assets/sounds/"
 ICONS_PATH = "assets/icons/"
 PIECES_ICONS_PATH = "assets/icons/pieces_svg/"
-MERIDA_PIECES = PIECES_ICONS_PATH + "merida"
+MERIDA_PIECES = PIECES_ICONS_PATH + "merida/"
 
 #
 # SOUND_FX_PATH = path.dirname(__file__) #ICONS_PATH = path.dirname(__file__)
@@ -30,6 +30,7 @@ CHESS_BG = "chess_bg.png"
 # RGB values
 WHITE = (255, 255, 255)
 CHESS_BOARD_WHITE = (250, 250, 250)
+CHESS_BOARD_BLACK = (205, 133, 63)
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 128)
@@ -49,6 +50,10 @@ KNIGHT_NAME = "Knight"
 PAWN_NAME = "pawn"
 ROOK_NAME = "rook"
 QUEEN_NAME = "queen"
+
+# Black/White pieces
+WHITE_PIECE = "white"
+BLACK_PIECE = "black"
 
 # Title_Texts
 TITLE_CHESS = "Chess"
