@@ -13,7 +13,6 @@ class BoardSquare():
     def __init__(self):
         self.rect = None
         self.piece = Piece(None)
-        self.image = None
 
 
 class Board():
@@ -109,5 +108,5 @@ class Board():
     def set_piece_images(self):
         for i in range(8):
             for j in range(8):
-                if not self.grid[i][j].piece is None:
+                if self.grid[i][j].piece.color is not None:
                     self.grid[i][j].piece.set_image(self.grid[i][j].rect)

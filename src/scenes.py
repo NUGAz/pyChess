@@ -172,14 +172,37 @@ class GameScene(Scene):
     def __init__(self):
         super().__init__()
         self.board = Board()
+        self.dragging = False
+        self.piece_clicked = None
+        self.board.initialize_chess_board()
 
     def render(self, screen):
-        # self.board.draw_chess_board(screen)
         pass
 
     def update(self):
-        self.board.initialize_chess_board()
+        pass
 
     def handle_events(self, events):
         for event in events:
             mouse_pos = pygame.mouse.get_pos()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                self.piece_clicked = self.get_piece_clicked(mouse_pos)
+                if self.piece_clicked:
+                    self.dragging = True
+
+            elif event.type == pygame.MOUSEBUTTONUP:
+                self.dragging = False
+                self.piece_clicked = None
+
+            if event.type == pygame.MOUSEMOTION:
+                if self.dragging:
+                    self.board.grid[self.piece_clicked[0]][self.piece_clicked[1]].piece.update_image(
+                        mouse_pos)
+
+    def get_piece_clicked(self, mouse_pos):
+        for i in range(8):
+            for j in range(8):
+                if self.board.grid[i][j].piece.color is not None and self.board.grid[i][j].rect.collidepoint(mouse_pos):
+                    return (i, j)
+                return False
