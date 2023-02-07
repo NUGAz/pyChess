@@ -22,7 +22,7 @@ class Scene():
 
 class SceneManager():
     def __init__(self):
-        self.go_to(GameScene())
+        self.go_to(TitleScreen())
 
     def go_to(self, scene):
         self.scene = scene

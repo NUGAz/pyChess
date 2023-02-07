@@ -6,13 +6,13 @@ import pawn
 import queen
 import bishop
 from piece import Piece
-from constants import BLACK, CHESS_BOARD_WHITE, WHITE, ASPECT_RATIO_FRACTION
+from constants import BLACK, CHESS_BOARD_BLACK, CHESS_BOARD_WHITE, WHITE, ASPECT_RATIO_FRACTION, WHITE_PIECE, BLACK_PIECE
 
 
 class BoardSquare():
     def __init__(self):
         self.rect = None
-        self.piece = Piece(None, None)
+        self.piece = Piece(None)
         self.image = None
 
 
@@ -20,33 +20,33 @@ class Board():
     def __init__(self):
         self.grid = [[BoardSquare() for _ in range(8)] for _ in range(8)]
         self.initialize_chess_board()
-        # self.reset_board()
+        self.reset_board()
 
     def reset_board(self):
         # Black Pieces
-        self.grid[0][0].piece = rook.Rook("black", (0, 0))
-        self.grid[0][1].piece = knight.Knight("black", (0, 1))
-        self.grid[0][2].piece = bishop.Bishop("black", (0, 2))
-        self.grid[0][3].piece = queen.Queen("black", (0, 3))
-        self.grid[0][4].piece = king.King("black", (0, 4))
-        self.grid[0][5].piece = bishop.Bishop("black", (0, 5))
-        self.grid[0][6].piece = knight.Knight("black", (0, 6))
-        self.grid[0][7].piece = rook.Rook("black", (0, 7))
+        self.grid[0][0].piece = rook.Rook(BLACK_PIECE)
+        self.grid[0][1].piece = knight.Knight(BLACK_PIECE)
+        self.grid[0][2].piece = bishop.Bishop(BLACK_PIECE)
+        self.grid[0][3].piece = queen.Queen(BLACK_PIECE)
+        self.grid[0][4].piece = king.King(BLACK_PIECE)
+        self.grid[0][5].piece = bishop.Bishop(BLACK_PIECE)
+        self.grid[0][6].piece = knight.Knight(BLACK_PIECE)
+        self.grid[0][7].piece = rook.Rook(BLACK_PIECE)
 
         # White Pieces
-        self.grid[7][0].piece = rook.Rook("white", (7, 0))
-        self.grid[7][1].piece = knight.Knight("white", (7, 1))
-        self.grid[7][2].piece = bishop.Bishop("white", (7, 2))
-        self.grid[7][3].piece = queen.Queen("white", (7, 3))
-        self.grid[7][4].piece = king.King("white", (7, 4))
-        self.grid[7][5].piece = bishop.Bishop("white", (7, 5))
-        self.grid[7][6].piece = knight.Knight("white", (7, 6))
-        self.grid[7][7].piece = rook.Rook("white", (7, 7))
+        self.grid[7][0].piece = rook.Rook(WHITE_PIECE)
+        self.grid[7][1].piece = knight.Knight(WHITE_PIECE)
+        self.grid[7][2].piece = bishop.Bishop(WHITE_PIECE)
+        self.grid[7][3].piece = queen.Queen(WHITE_PIECE)
+        self.grid[7][4].piece = king.King(WHITE_PIECE)
+        self.grid[7][5].piece = bishop.Bishop(WHITE_PIECE)
+        self.grid[7][6].piece = knight.Knight(WHITE_PIECE)
+        self.grid[7][7].piece = rook.Rook(WHITE_PIECE)
 
         # Pawns
         for i in range(8):
-            self.grid[6][i].piece = pawn.Pawn("white", (6, i))
-            self.grid[1][i].piece = pawn.Pawn("black", (1, i))
+            self.grid[6][i].piece = pawn.Pawn(WHITE_PIECE)
+            self.grid[1][i].piece = pawn.Pawn(BLACK_PIECE)
 
     def draw_rect(self, screen, x, y, width, height, color):
         rect = pygame.Rect(x, y, width, height)
@@ -61,13 +61,12 @@ class Board():
         screen.fill(WHITE)
 
         # board will cover 85% of the vertical height of the screen
-        square_size = min(window_y * 0.80 / 8, window_x *
-                          0.9 / ASPECT_RATIO_FRACTION / 8)
+        square_size = self.get_square_size()
         board_size = 8 * square_size
         x_board_offset = (window_x - board_size) / 2
         y_board_offset = (window_y - board_size) / 2
         square_color_white = CHESS_BOARD_WHITE
-        square_color_black = BLACK
+        square_color_black = CHESS_BOARD_BLACK
 
         for i in range(1, 9):
             for j in range(1, 9, 2):
@@ -99,3 +98,16 @@ class Board():
         # bottom horizontal
         pygame.draw.line(screen, BLACK, (x_board_offset, self.grid[7][0].rect.y + square_size),
                          (self.grid[0][7].rect.x + square_size, self.grid[7][0].rect.y + square_size))
+        self.set_piece_images()
+
+    def get_square_size(self):
+        window_x = pygame.display.Info().current_w
+        window_y = pygame.display.Info().current_h
+        return min(window_y * 0.80 / 8, window_x *
+                   0.9 / ASPECT_RATIO_FRACTION / 8)
+
+    def set_piece_images(self):
+        for i in range(8):
+            for j in range(8):
+                if not self.grid[i][j].piece is None:
+                    self.grid[i][j].piece.set_image(self.grid[i][j].rect)
