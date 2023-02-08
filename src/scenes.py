@@ -173,36 +173,54 @@ class GameScene(Scene):
         super().__init__()
         self.board = Board()
         self.dragging = False
-        self.piece_clicked = None
-        self.board.initialize_chess_board()
+        self.piece_clicked_pos = None
+        self.dragged_piece_rect = None
+        self.dragged_piece_image = None
+        self.mouse_pos = pygame.mouse.get_pos()
 
     def render(self, screen):
-        pass
+        screen.fill(constants.WHITE)
+        self.board.draw_board()
+        self.board.set_piece_images()
+        if self.dragging:
+            self.drag_piece()
 
     def update(self):
         pass
 
     def handle_events(self, events):
         for event in events:
-            mouse_pos = pygame.mouse.get_pos()
+            self.mouse_pos = pygame.mouse.get_pos()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                self.piece_clicked = self.get_piece_clicked(mouse_pos)
-                if self.piece_clicked:
+                self.piece_clicked_pos = self.get_piece_clicked(
+                    self.mouse_pos)
+                if self.piece_clicked_pos:
                     self.dragging = True
+                    self.board.set_dragged_piece(self.piece_clicked_pos)
+                    self.dragged_piece_image = self.board.grid[self.piece_clicked_pos[0]
+                                                               ][self.piece_clicked_pos[1]].piece.get_image()
+                    self.dragged_piece_rect = self.dragged_piece_image.get_rect()
+                    self.board.grid[self.piece_clicked_pos[0]
+                                    ][self.piece_clicked_pos[1]].piece = None
 
             elif event.type == pygame.MOUSEBUTTONUP:
-                self.dragging = False
-                self.piece_clicked = None
-
-            if event.type == pygame.MOUSEMOTION:
                 if self.dragging:
-                    self.board.grid[self.piece_clicked[0]][self.piece_clicked[1]].piece.update_image(
-                        mouse_pos)
+                    self.dragging = False
+                    # if valid move
+                    if self.dragging == "power":
+                        pass
+                    else:
+                        self.board.set_moved_piece(self.piece_clicked_pos)
+                    self.piece_clicked_pos = None
+
+    def drag_piece(self):
+        self.dragged_piece_rect.center = self.mouse_pos
+        pygame.display.get_surface().blit(self.dragged_piece_image, self.dragged_piece_rect)
 
     def get_piece_clicked(self, mouse_pos):
         for i in range(8):
             for j in range(8):
-                if self.board.grid[i][j].piece.color is not None and self.board.grid[i][j].rect.collidepoint(mouse_pos):
+                if self.board.grid[i][j].piece is not None and self.board.grid[i][j].rect.collidepoint(mouse_pos):
                     return (i, j)
-                return False
+        return False

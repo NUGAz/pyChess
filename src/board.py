@@ -18,6 +18,7 @@ class BoardSquare():
 class Board():
     def __init__(self):
         self.grid = [[BoardSquare() for _ in range(8)] for _ in range(8)]
+        self.dragged_piece = Piece(None)
         self.initialize_chess_board()
         self.reset_board()
 
@@ -52,6 +53,10 @@ class Board():
         return pygame.draw.rect(screen, color, rect)
 
     def initialize_chess_board(self):
+        self.draw_board()
+        self.set_piece_images()
+
+    def draw_board(self):
         window_x = pygame.display.Info().current_w
         window_y = pygame.display.Info().current_h
 
@@ -97,7 +102,6 @@ class Board():
         # bottom horizontal
         pygame.draw.line(screen, BLACK, (x_board_offset, self.grid[7][0].rect.y + square_size),
                          (self.grid[0][7].rect.x + square_size, self.grid[7][0].rect.y + square_size))
-        self.set_piece_images()
 
     def get_square_size(self):
         window_x = pygame.display.Info().current_w
@@ -108,5 +112,12 @@ class Board():
     def set_piece_images(self):
         for i in range(8):
             for j in range(8):
-                if self.grid[i][j].piece.color is not None:
+                if self.grid[i][j].piece is not None:
                     self.grid[i][j].piece.set_image(self.grid[i][j].rect)
+
+    def set_dragged_piece(self, pos):
+        self.dragged_piece = self.grid[pos[0]][pos[1]].piece
+
+    def set_moved_piece(self, pos):
+        self.grid[pos[0]][pos[1]].piece = self.dragged_piece
+        self.dragged_piece = None
