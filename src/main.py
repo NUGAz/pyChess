@@ -3,10 +3,6 @@ from scenes import SceneManager
 import constants
 
 
-def draw_line(start_x, start_y, end_x, end_y, color):
-    pygame.draw.line(screen, color, (start_x, start_y), (end_x, end_y))
-
-
 def calculate_new_window_size(resizable_event):
     new_width, new_height = resizable_event[0].size
 
