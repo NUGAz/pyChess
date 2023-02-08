@@ -8,8 +8,5 @@ class Piece():
     def get_image(self):
         pass
 
-    def update_image(self, pos):
-        pass
-
     def move(self):
         raise NotImplementedError

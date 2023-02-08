@@ -14,10 +14,12 @@ class Knight(piece.Piece):
         self.image = image.load(MERIDA_PIECES + black_or_white_icon)
 
     def set_image(self, square_rect):
-        screen = display.get_surface()
         self.image = transform.smoothscale(
             self.image, (square_rect.w, square_rect.h))
-        screen.blit(self.image, square_rect)
+        display.get_surface().blit(self.image, square_rect)
+
+    def get_image(self):
+        return self.image
 
     def move(self):
         pass
