@@ -12,7 +12,7 @@ from constants import BLACK, CHESS_BOARD_BLACK, CHESS_BOARD_WHITE, WHITE, ASPECT
 class BoardSquare():
     def __init__(self):
         self.rect = None
-        self.piece = Piece(None)
+        self.piece = None
 
 
 class Board():
@@ -121,3 +121,26 @@ class Board():
     def set_moved_piece(self, pos):
         self.grid[pos[0]][pos[1]].piece = self.dragged_piece
         self.dragged_piece = None
+
+    def get_dropped_square(self, mouse_pos):
+        square_size = self.get_square_size()
+        if mouse_pos[1] < self.grid[0][0].rect.y or mouse_pos[1] > self.grid[7][0].rect.y + square_size:
+            return False
+
+        if mouse_pos[0] > self.grid[0][7].rect.x + square_size or mouse_pos[0] < self.grid[0][0].rect.x:
+            return False
+
+        y_pos = x_pos = 0
+        for i in range(8):
+            if mouse_pos[0] < self.grid[0][i].rect.x + square_size:
+                y_pos = i
+                break
+
+        for i in range(8):
+            if mouse_pos[1] < self.grid[i][0].rect.y + square_size:
+                x_pos = i
+                break
+
+        if self.dragged_piece == self.grid[x_pos][y_pos]:
+            return False
+        return (x_pos, y_pos)

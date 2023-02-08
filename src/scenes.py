@@ -208,8 +208,10 @@ class GameScene(Scene):
                 if self.dragging:
                     self.dragging = False
                     # if valid move
-                    if self.dragging == "power":
-                        pass
+                    dropped_square = self.board.get_dropped_square(
+                        self.mouse_pos)
+                    if dropped_square:  # and valid move:
+                        self.board.set_moved_piece(dropped_square)
                     else:
                         self.board.set_moved_piece(self.piece_clicked_pos)
                     self.piece_clicked_pos = None
@@ -223,4 +225,5 @@ class GameScene(Scene):
             for j in range(8):
                 if self.board.grid[i][j].piece is not None and self.board.grid[i][j].rect.collidepoint(mouse_pos):
                     return (i, j)
+
         return False
