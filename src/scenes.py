@@ -174,9 +174,7 @@ class GameScene(Scene):
         self.board = Board()
         self.dragging = False
         self.piece_clicked_pos = None
-        self.dragged_piece_rect = None
-        self.dragged_piece_image = None
-        self.is_player_move = True
+        self.player_color = constants.WHITE_PIECE
         self.mouse_pos = pygame.mouse.get_pos()
 
     def render(self, screen):
@@ -198,11 +196,6 @@ class GameScene(Scene):
                 if self.piece_clicked_pos:
                     self.dragging = True
                     self.board.set_dragged_piece(self.piece_clicked_pos)
-                    self.dragged_piece_image = self.board.grid[self.piece_clicked_pos[0]
-                                                               ][self.piece_clicked_pos[1]].piece.get_image()
-                    self.dragged_piece_rect = self.dragged_piece_image.get_rect()
-                    self.board.grid[self.piece_clicked_pos[0]
-                                    ][self.piece_clicked_pos[1]].piece = None
 
             elif event.type == pygame.MOUSEBUTTONUP:
                 if self.dragging:
@@ -217,8 +210,7 @@ class GameScene(Scene):
                     self.piece_clicked_pos = None
 
     def drag_piece(self):
-        self.dragged_piece_rect.center = self.mouse_pos
-        pygame.display.get_surface().blit(self.dragged_piece_image, self.dragged_piece_rect)
+        self.board._dragged_piece.update_rect_center(self.mouse_pos)
 
     def get_piece_clicked(self, mouse_pos):
         for i in range(8):
