@@ -176,17 +176,17 @@ class GameScene(Scene):
         self.piece_clicked_pos = None
         self.dragged_piece_rect = None
         self.dragged_piece_image = None
+        self.is_player_move = True
         self.mouse_pos = pygame.mouse.get_pos()
 
     def render(self, screen):
         screen.fill(constants.WHITE)
         self.board.draw_board()
         self.board.set_piece_images()
-        if self.dragging:
-            self.drag_piece()
 
     def update(self):
-        pass
+        if self.dragging:
+            self.drag_piece()
 
     def handle_events(self, events):
         for event in events:
