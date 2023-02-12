@@ -1,12 +1,13 @@
 import piece
-from constants import WHITE_PIECE, BLACK_PIECE, KING_NAME, MERIDA_PIECES
+from constants import WHITE_PIECE, BLACK_PIECE, PAWN_NAME, MERIDA_PIECES
 from pygame import image, display, transform
 
 
 class Pawn(piece.Piece):
     def __init__(self, color):
         super().__init__(color)
-        self.name = KING_NAME
+        self.name = PAWN_NAME
+        self._first_move = True
         if color == WHITE_PIECE:
             black_or_white_icon = "wP.svg"
         else:
@@ -21,5 +22,16 @@ class Pawn(piece.Piece):
     def get_image(self):
         return self.image
 
+    @property
+    def first_move(self):
+        return self._first_move
+
+    @first_move.setter
+    def first_move(self, first_move_false=False):
+        self._first_move = first_move_false
+
     def move(self):
-        pass
+        valid_moves = [(1, 0)]
+        if self._first_move:
+            valid_moves.append((2, 0))
+        return valid_moves
