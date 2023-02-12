@@ -18,9 +18,17 @@ class BoardSquare():
 class Board():
     def __init__(self):
         self.grid = [[BoardSquare() for _ in range(8)] for _ in range(8)]
-        self.dragged_piece = Piece(None)
+        self._dragged_piece = None
         self.initialize_chess_board()
         self.reset_board()
+
+    @property
+    def dragged_piece(self):
+        return self._dragged_piece
+
+    @dragged_piece.setter
+    def dragged_piece(self, piece):
+        self._dragged_piece = piece
 
     def reset_board(self):
         # Black Pieces
@@ -110,17 +118,21 @@ class Board():
                    0.9 / ASPECT_RATIO_FRACTION / 8)
 
     def set_piece_images(self):
+        if self._dragged_piece:
+            self._dragged_piece.set_image()
         for i in range(8):
             for j in range(8):
                 if self.grid[i][j].piece is not None:
-                    self.grid[i][j].piece.set_image(self.grid[i][j].rect)
+                    self.grid[i][j].piece.rect = self.grid[i][j].rect
+                    self.grid[i][j].piece.set_image()
 
     def set_dragged_piece(self, pos):
-        self.dragged_piece = self.grid[pos[0]][pos[1]].piece
+        self._dragged_piece = self.grid[pos[0]][pos[1]].piece
+        self.grid[pos[0]][pos[1]].piece = None
 
     def set_moved_piece(self, pos):
-        self.grid[pos[0]][pos[1]].piece = self.dragged_piece
-        self.dragged_piece = None
+        self.grid[pos[0]][pos[1]].piece = self._dragged_piece
+        self._dragged_piece = None
 
     def get_dropped_square(self, mouse_pos):
         square_size = self.get_square_size()
@@ -141,6 +153,6 @@ class Board():
                 x_pos = i
                 break
 
-        if self.dragged_piece == self.grid[x_pos][y_pos]:
+        if self._dragged_piece == self.grid[x_pos][y_pos]:
             return False
         return (x_pos, y_pos)
